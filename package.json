@@ -1,0 +1,14 @@
+{
+    "name": "discordbot_asai",
+    "version": "1.0.0",
+    "description": "Discord Bot for Enders Zone",
+    "main": "./bot.js",
+    "private": true,
+    "dependencies": {
+        "@discordjs/opus": "^0.5.0",
+        "bufferutil": "^4.0.3",
+        "discord.js": "^12.5.1",
+        "sodium": "^3.0.2",
+        "utf-8-validate": "^5.0.4"
+    }
+}

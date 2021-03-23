@@ -6,7 +6,13 @@ const rcon = require("./rcon/node-rcon");
 const discordClient = new Discord.Client();
 
 //Allowed channels to monitor
-const allowedChannels = ["test"];
+const allowedChannels = settings.whitelist.channels;
+
+//Allowed user role for administration commands
+const allowedAdminRoles = settings.whitelist.roles.admin;
+
+//Allowed user roles for information commands
+const allowedUserRoles = settings.whitelist.roles.user;
 
 //Init Rcon
 const conanRcon = new rcon(
@@ -26,7 +32,7 @@ discordClient.on("ready", () => {
 // Create an event listener for messages
 discordClient.on("message", (message) => {
     // If the message is "ping"
-    if (message.content === "ping") {
+    if (message.content.includes("ping")) {
         // Log "ping", name and channel
         console.log(
             `Ping received from ${message.author.username} in channel #${message.channel.name}!`
@@ -79,7 +85,8 @@ conanRcon.on("auth", () => {
     console.log("Logged into RCON");
     console.log(`
     Is authed: ${conanRcon.hasAuthed},
-    Challenge: ${conanRcon.challenge}`);
+    Challenge: ${conanRcon.challenge}
+    `);
 });
 
 //Connection was closed
@@ -93,15 +100,14 @@ conanRcon.on('response', function(str) {
 });
 
 //Server sent a message regardless of command
-conanRcon.on('server', function(server) {
-    console.log(server);
+conanRcon.on('server', function(str) {
+    console.log(str);
 });
 
 //Server sent an error message
-conanRcon.on("error", function(error) {
-    console.log(error);
+conanRcon.on("error", function(str) {
+    console.log(str);
 });
 
-conanRcon.connect();
 
 //#endregion

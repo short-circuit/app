@@ -19,6 +19,9 @@ To use it, you will need to setup a settings.json file with the following struct
             },
             "password": "CONAN_SERVER_PASSWORD_RCON"
         }
-    }
+    },
+
+    ...
+    
 }
 ```

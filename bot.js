@@ -1,14 +1,8 @@
 //Get settings token
-const { token } = require("./settings.json");
-const {
-    conan_rcon_host,
-    conan_rcon_options,
-    conan_rcon_password,
-    conan_rcon_port,
-} = require("./settings.json");
+const settings = require("./settings.json");
 //Get Discord.JS object
 const Discord = require("discord.js");
-const rcon = require("./lib/rcon");
+const rcon = require("./rcon/node-rcon");
 const discordClient = new Discord.Client();
 
 //Allowed channels to monitor
@@ -16,10 +10,10 @@ const allowedChannels = ["test"];
 
 //Init Rcon
 const conanRcon = new rcon(
-    conan_rcon_host,
-    conan_rcon_port,
-    conan_rcon_password,
-    conan_rcon_options
+    settings.rcon.conan.host,
+    settings.rcon.conan.port,
+    settings.rcon.conan.password,
+    settings.rcon.conan.options
 );
 
 //#region Discord
@@ -75,7 +69,7 @@ discordClient.on("message", (message) => {
     }
 });
 
-discordClient.login(token);
+discordClient.login(settings.discord.token);
 //#endregion
 
 //#region RCON Conan Exiles

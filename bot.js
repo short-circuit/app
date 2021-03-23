@@ -1,3 +1,6 @@
+//Get console log timestamps
+require('log-timestamp')
+
 //Get settings token
 const settings = require("./settings.json");
 //Get Discord.JS object

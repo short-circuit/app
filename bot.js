@@ -5,7 +5,7 @@ require('log-timestamp');
 const settings = require("./settings.json");
 //Get Discord.JS object
 const Discord = require("discord.js");
-const rcon = require("./rcon/node-rcon");
+const rcon = require("./lib/rcon");
 const discordClient = new Discord.Client();
 
 //Allowed channels to monitor

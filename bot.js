@@ -1,5 +1,5 @@
 //Get console log timestamps
-require('log-timestamp')
+require('log-timestamp');
 
 //Get settings token
 const settings = require("./settings.json");
@@ -42,7 +42,16 @@ discordClient.on("message", (message) => {
         );
     }
 
-    if (allowedChannels.includes(message.channel.name)) {
+    //Check wether channel and sending user have access rights to bot functions
+    if (allowedChannels.includes(message.channel.name) && message.member.roles.cache.some(role=>allowedAdminRoles.includes(role.name))) {
+        
+        if(message.content.includes("!rcon")) {
+            if(!conanRcon.hasAuthed){
+                conanRcon.connect();
+            }
+            conanRcon.send("");
+        }
+
         //Print bot information
         if (message.content === "!botinfo") {
             message.channel.send(
@@ -56,7 +65,9 @@ discordClient.on("message", (message) => {
             message.channel.bulkDelete(100).then(console.log(`Deleted`));
         }
 
+
         if (message.content === "!playerlist" && message.channel.name === 'test') {//conanserver
+            conanRcon.send("");
             conanRcon.send("listplayers");
             console.log('request sent to rcon');
         }
@@ -71,7 +82,17 @@ discordClient.on("message", (message) => {
             console.log('request sent to rcon');
         }
 
-        if (message.content.includes("!broadcast") && message.channel.name === 'test') {//conanserver
+        if (message.content === "!rcon_disconnect" && message.channel.name === 'test') {//conanserver
+            conanRcon.disconnect();
+            console.log('request sent to rcon');
+        }
+
+        if (message.content.includes("!broadcast ") && message.channel.name === 'test') {//conanserver
+            conanRcon.send(message.content.substr(1));
+            console.log('request sent to rcon');
+        }
+
+        if (message.content.includes("!server ") && message.channel.name === 'test') {//conanserver
             conanRcon.send(message.content.substr(1));
             console.log('request sent to rcon');
         }
@@ -86,10 +107,7 @@ discordClient.login(settings.discord.token);
 //Connected
 conanRcon.on("auth", () => {
     console.log("Logged into RCON");
-    console.log(`
-    Is authed: ${conanRcon.hasAuthed},
-    Challenge: ${conanRcon.challenge}
-    `);
+    console.log(`Is authed: ${conanRcon.hasAuthed}`);
 });
 
 //Connection was closed
@@ -100,6 +118,13 @@ conanRcon.on("end", () => {
 //Server sent a response to a command
 conanRcon.on('response', function(str) {
     console.log("Got response: " + str);
+
+    if(message.content === "!rcon_help") {
+        const arr=str.split('/(?:\r\n|\r|\n)/g');
+        arr.forEach(element => {
+            console.log(element);
+        });
+    }
 });
 
 //Server sent a message regardless of command
@@ -112,5 +137,5 @@ conanRcon.on("error", function(str) {
     console.log(str);
 });
 
-
+// conanRcon.connect();
 //#endregion

@@ -5,10 +5,10 @@ require('log-timestamp');
 const settings = require("./settings.json");
 //Get Discord.JS object
 // const Discord = require("discord.js");
-const {DiscordClient, DiscordIntents} = require('discord.js');
+const {Client, Intents} = require('discord.js');
 const rcon = require("./lib/rcon");
 // const discordClient = new Discord.Client();
-const discordClient = new DiscordClient({ intents: [DiscordIntents.FLAGS.GUILDS] });
+const discordClient = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
 //Allowed channels to monitor 
 const allowedChannels = settings.whitelist.channels;

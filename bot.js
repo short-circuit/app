@@ -4,11 +4,13 @@ require('log-timestamp');
 //Get settings token
 const settings = require("./settings.json");
 //Get Discord.JS object
-const Discord = require("discord.js");
+// const Discord = require("discord.js");
+const {DiscordClient, DiscordIntents} = require('discord.js');
 const rcon = require("./lib/rcon");
-const discordClient = new Discord.Client();
+// const discordClient = new Discord.Client();
+const discordClient = new DiscordClient({ intents: [DiscordIntents.FLAGS.GUILDS] });
 
-//Allowed channels to monitor
+//Allowed channels to monitor 
 const allowedChannels = settings.whitelist.channels;
 
 //Allowed user role for administration commands
@@ -44,7 +46,6 @@ discordClient.on("message", (message) => {
 
     //Check wether channel and sending user have access rights to bot functions
     if (allowedChannels.includes(message.channel.name) && message.member.roles.cache.some(role=>allowedAdminRoles.includes(role.name))) {
-        
         if(message.content.includes("!rcon")) {
             if(!conanRcon.hasAuthed){
                 conanRcon.connect();
@@ -96,6 +97,9 @@ discordClient.on("message", (message) => {
             conanRcon.send(message.content.substr(1));
             console.log('request sent to rcon');
         }
+
+        if(message.content.includes("!rcon"))
+            lastcommand=message.content;
     }
 });
 
@@ -117,13 +121,23 @@ conanRcon.on("end", () => {
 
 //Server sent a response to a command
 conanRcon.on('response', function(str) {
-    console.log("Got response: " + str);
-
-    if(message.content === "!rcon_help") {
-        const arr=str.split('/(?:\r\n|\r|\n)/g');
-        arr.forEach(element => {
-            console.log(element);
-        });
+    // console.log("Got response: " + str);
+    let helparr = [];
+    if(lastcommand.includes("!rcon_help")) {
+        let arr=str.split('/(?:\r\n|\r|\n)/g');
+        console.log(arr.length);
+        for (let index = 1; index < arr.length; index+2) {
+            console.log(arr.length);
+            const cmd = array[index];
+            const info = array[index+1];
+            let helpobj = `${cmd} - ${info}`;
+            console.log(helpobj);
+            helparr.push(helpobj);
+        }
+        // console.log(helparr[1]);
+        // arr.forEach(element => {
+        //     console.log(element);
+        // });
     }
 });
 
@@ -137,5 +151,5 @@ conanRcon.on("error", function(str) {
     console.log(str);
 });
 
-// conanRcon.connect();
+conanRcon.connect();
 //#endregion

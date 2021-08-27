@@ -5,11 +5,11 @@
     "main": "./bot.js",
     "private": true,
     "dependencies": {
-        "@discordjs/opus": "^0.5.0",
+        "@discordjs/opus": "^0.5.3",
         "bufferutil": "^4.0.3",
-        "discord.js": "^12.5.1",
+        "discord.js": "^13.1.0",
         "log-timestamp": "^0.3.0",
         "sodium": "^3.0.2",
-        "utf-8-validate": "^5.0.4"
+        "utf-8-validate": "^5.0.5"
     }
 }
